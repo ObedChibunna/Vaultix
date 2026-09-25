@@ -16,6 +16,7 @@ import { User } from './modules/user/entities/user.entity';
 import { RefreshToken } from './modules/user/entities/refresh-token.entity';
 import { EmailVerification } from './modules/user/entities/email-verification.entity';
 import { Escrow } from './modules/escrow/entities/escrow.entity';
+import { SorobanTxIntent } from './modules/escrow/entities/soroban-tx-intent.entity';
 import { Party } from './modules/escrow/entities/party.entity';
 import { Condition } from './modules/escrow/entities/condition.entity';
 import { EscrowEvent } from './modules/escrow/entities/escrow-event.entity';
@@ -106,6 +107,7 @@ import { BackupRecord } from './modules/backup/entities/backup-record.entity';
           WebhookDeadLetter,
           StellarEvent,
           AllowedAsset,
+          SorobanTxIntent,
           EmailOutbox,
           BackupRecord,
           KycVerification,
