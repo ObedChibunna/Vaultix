@@ -103,8 +103,6 @@ export class SorobanTxIntent {
   })
   resourceFeeStroops?: string | null;
 
-  @Column({ type: 'bigint', nullable: true, name: 'min_resource_amount' })
-
   /** Ledger the simulation was evaluated against. */
   @Column({ type: 'bigint', nullable: true, name: 'simulated_at_ledger' })
   simulatedAtLedger?: string | null;
