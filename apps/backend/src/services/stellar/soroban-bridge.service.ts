@@ -195,12 +195,14 @@ export class SorobanBridgeService {
     arbitratorPublicKey: string,
     winnerPublicKey: string,
     splitWinnerAmount?: string,
+    resolutionEvidenceHash?: string,
   ): Promise<string> {
     const onChainId = await this.chainIds.requireForEscrow(escrowId);
     const operations = this.escrowOperationsService.createResolveDisputeOps(
       onChainId,
       winnerPublicKey,
       splitWinnerAmount,
+      resolutionEvidenceHash,
     );
     const transaction = await this.stellarService.buildTransaction(
       arbitratorPublicKey,

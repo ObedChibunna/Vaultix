@@ -198,6 +198,23 @@ describe('EscrowStellarIntegrationService', () => {
         '18446744073709551615',
         'winner-pubkey',
         '50',
+        undefined,
+      );
+    });
+
+    it('forwards an optional resolution evidence hash', async () => {
+      await service.resolveOnChainDispute(
+        'e1',
+        'winner-pubkey',
+        'arbitrator-pubkey',
+        '50',
+        'ab'.repeat(32),
+      );
+      expect(escrowOps.createResolveDisputeOps).toHaveBeenCalledWith(
+        'e1',
+        'winner-pubkey',
+        '50',
+        'ab'.repeat(32),
       );
     });
   });
