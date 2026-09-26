@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Escrow } from './entities/escrow.entity';
+import { EscrowCreationIntent } from './entities/escrow-creation-intent.entity';
 import { Party } from './entities/party.entity';
 import { Condition } from './entities/condition.entity';
 import { EscrowEvent } from './entities/escrow-event.entity';
 import { Dispute } from './entities/dispute.entity';
 import { EscrowService } from './services/escrow.service';
+import { EscrowCreationService } from './services/escrow-creation.service';
 import { EscrowSchedulerService } from './services/escrow-scheduler.service';
 import { EscrowController } from './controllers/escrow.controller';
 import { EscrowSchedulerController } from './controllers/escrow-scheduler.controller';
@@ -36,6 +38,7 @@ import { SorobanIntentService } from './services/soroban-intent.service';
   imports: [
     TypeOrmModule.forFeature([
       Escrow,
+      EscrowCreationIntent,
       Party,
       Condition,
       EscrowEvent,
@@ -54,6 +57,7 @@ import { SorobanIntentService } from './services/soroban-intent.service';
   controllers: [EscrowController, EscrowSchedulerController, EventsController],
   providers: [
     EscrowService,
+    EscrowCreationService,
     EscrowSchedulerService,
     EscrowStellarIntegrationService,
     EscrowAccessGuard,
