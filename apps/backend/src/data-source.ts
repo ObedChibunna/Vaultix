@@ -19,6 +19,7 @@ import { AllowedAsset } from './modules/assets/entities/allowed-asset.entity';
 import { EmailOutbox } from './email/entities/email-outbox.entity';
 import { BackupRecord } from './modules/backup/entities/backup-record.entity';
 import { KycVerification } from './modules/kyc/entities/kyc-verification.entity';
+import { EscrowChainId } from './modules/escrow/entities/escrow-chain-id.entity';
 
 config(); // Load .env file
 
@@ -45,6 +46,7 @@ export default new DataSource({
     EmailOutbox,
     BackupRecord,
     KycVerification,
+    EscrowChainId,
   ],
   migrations: ['./src/migrations/*.ts'],
   synchronize: false,

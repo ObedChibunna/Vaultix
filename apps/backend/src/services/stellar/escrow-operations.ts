@@ -2,12 +2,17 @@ import * as StellarSdk from '@stellar/stellar-sdk';
 import { Injectable, Logger } from '@nestjs/common';
 import { normalizeMetadataHash } from '../../modules/escrow/utils/metadata-hash.util';
 import { decimalToBaseUnits } from '../../modules/escrow/amount.util';
+import { validateSorobanU64 } from '../../modules/escrow/utils/soroban-u64.util';
 
 @Injectable()
 export class EscrowOperationsService {
   private readonly logger = new Logger(EscrowOperationsService.name);
 
   private readonly contractId: string;
+
+  private u64(value: string): StellarSdk.xdr.Uint64 {
+    return new StellarSdk.xdr.Uint64(validateSorobanU64(value));
+  }
 
   constructor() {
     this.contractId = process.env.STELLAR_CONTRACT_ID || '';
@@ -71,7 +76,7 @@ export class EscrowOperationsService {
 
       const op = contract.call(
         'create_escrow',
-        StellarSdk.xdr.ScVal.scvU64(new StellarSdk.xdr.Uint64(escrowId)),
+        StellarSdk.xdr.ScVal.scvU64(this.u64(escrowId)),
         new StellarSdk.Address(depositorPublicKey).toScVal(),
         new StellarSdk.Address(recipientPublicKey).toScVal(),
         new StellarSdk.Address(
@@ -109,7 +114,7 @@ export class EscrowOperationsService {
       const contract = new StellarSdk.Contract(this.contractId);
       const op = contract.call(
         'deposit_funds',
-        StellarSdk.xdr.ScVal.scvU64(new StellarSdk.xdr.Uint64(escrowId)),
+        StellarSdk.xdr.ScVal.scvU64(this.u64(escrowId)),
       );
 
       return [op];
@@ -140,7 +145,7 @@ export class EscrowOperationsService {
       const contract = new StellarSdk.Contract(this.contractId);
       const op = contract.call(
         'release_milestone',
-        StellarSdk.xdr.ScVal.scvU64(new StellarSdk.xdr.Uint64(escrowId)),
+        StellarSdk.xdr.ScVal.scvU64(this.u64(escrowId)),
         StellarSdk.xdr.ScVal.scvU32(milestoneId),
       );
 
@@ -169,7 +174,7 @@ export class EscrowOperationsService {
       const contract = new StellarSdk.Contract(this.contractId);
       const op = contract.call(
         'confirm_delivery',
-        StellarSdk.xdr.ScVal.scvU64(new StellarSdk.xdr.Uint64(escrowId)),
+        StellarSdk.xdr.ScVal.scvU64(this.u64(escrowId)),
         StellarSdk.xdr.ScVal.scvU32(milestoneId),
         new StellarSdk.Address(confirmerPublicKey).toScVal(),
       );
@@ -196,7 +201,7 @@ export class EscrowOperationsService {
       const contract = new StellarSdk.Contract(this.contractId);
       const op = contract.call(
         'cancel_escrow',
-        StellarSdk.xdr.ScVal.scvU64(new StellarSdk.xdr.Uint64(escrowId)),
+        StellarSdk.xdr.ScVal.scvU64(this.u64(escrowId)),
       );
 
       return [op];
@@ -221,7 +226,7 @@ export class EscrowOperationsService {
       const contract = new StellarSdk.Contract(this.contractId);
       const op = contract.call(
         'complete_escrow',
-        StellarSdk.xdr.ScVal.scvU64(new StellarSdk.xdr.Uint64(escrowId)),
+        StellarSdk.xdr.ScVal.scvU64(this.u64(escrowId)),
       );
 
       return [op];
@@ -246,7 +251,7 @@ export class EscrowOperationsService {
       const contract = new StellarSdk.Contract(this.contractId);
       const op = contract.call(
         'raise_dispute',
-        StellarSdk.xdr.ScVal.scvU64(new StellarSdk.xdr.Uint64(escrowId)),
+        StellarSdk.xdr.ScVal.scvU64(this.u64(escrowId)),
         new StellarSdk.Address(callerPublicKey).toScVal(),
       );
 
@@ -275,7 +280,7 @@ export class EscrowOperationsService {
       const contract = new StellarSdk.Contract(this.contractId);
       const op = contract.call(
         'resolve_dispute',
-        StellarSdk.xdr.ScVal.scvU64(new StellarSdk.xdr.Uint64(escrowId)),
+        StellarSdk.xdr.ScVal.scvU64(this.u64(escrowId)),
         new StellarSdk.Address(winnerPublicKey).toScVal(),
         splitWinnerAmount
           ? StellarSdk.xdr.ScVal.scvVec([

@@ -29,6 +29,8 @@ import { EscrowIpfsSyncService } from './services/escrow-ipfs-sync.service';
 import { EscrowExpirySchedulerService } from './services/escrow-expiry-scheduler.service';
 import { AdminModule } from '../admin/admin.module';
 import { forwardRef } from '@nestjs/common';
+import { EscrowChainId } from './entities/escrow-chain-id.entity';
+import { EscrowChainIdService } from './services/escrow-chain-id.service';
 
 @Module({
   imports: [
@@ -40,6 +42,7 @@ import { forwardRef } from '@nestjs/common';
       Dispute,
       User,
       AllowedAsset,
+      EscrowChainId,
     ]),
     AuthModule,
     KycModule,
@@ -62,6 +65,7 @@ import { forwardRef } from '@nestjs/common';
     EscrowEvidenceService,
     EscrowIpfsSyncService,
     EscrowExpirySchedulerService,
+    EscrowChainIdService,
   ],
   exports: [
     EscrowService,
@@ -73,6 +77,7 @@ import { forwardRef } from '@nestjs/common';
     EscrowEvidenceService,
     EscrowIpfsSyncService,
     EscrowExpirySchedulerService,
+    EscrowChainIdService,
   ],
 })
 export class EscrowModule {}
