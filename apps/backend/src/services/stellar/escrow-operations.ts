@@ -1,7 +1,6 @@
 import * as StellarSdk from '@stellar/stellar-sdk';
 import { Injectable, Logger } from '@nestjs/common';
 import { normalizeMetadataHash } from '../../modules/escrow/utils/metadata-hash.util';
-import { decimalToBaseUnits } from '../../modules/escrow/amount.util';
 import { validateSorobanU64 } from '../../modules/escrow/utils/soroban-u64.util';
 import { decimalToBaseUnits, I128_MAX } from '../../modules/escrow/amount.util';
 
