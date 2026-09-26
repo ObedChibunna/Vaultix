@@ -96,6 +96,15 @@ export class Escrow {
   @Column({ type: 'datetime', nullable: true })
   fundedAt?: Date;
 
+  /**
+   * The u64 the contract uses for this escrow. The contract takes the escrow id
+   * as an explicit argument, so this is allocated once when the create intent
+   * is prepared and then reused by every later operation. Kept as a string
+   * because u64 exceeds the JS safe-integer range.
+   */
+  @Column({ type: 'varchar', nullable: true, name: 'on_chain_id' })
+  onChainId?: string | null;
+
   @Column({ default: false })
   isReleased: boolean;
 

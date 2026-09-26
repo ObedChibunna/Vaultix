@@ -10,6 +10,7 @@ import {
   Request,
   Req,
   ForbiddenException,
+  NotFoundException,
   UseInterceptors,
   UploadedFiles,
   ParseFilePipe,
@@ -58,6 +59,8 @@ import {
   EvidenceFileMetadataDto,
   UploadEvidenceResponseDto,
 } from '../dto/upload-evidence.dto';
+import { PrepareIntentDto } from '../dto/prepare-intent.dto';
+import { SorobanIntentService } from '../services/soroban-intent.service';
 
 interface AuthenticatedRequest extends ExpressRequest {
   user: { sub?: string; userId?: string; walletAddress: string };
@@ -73,6 +76,7 @@ export class EscrowController {
     private readonly creationService: EscrowCreationService,
     private readonly evidenceService: EscrowEvidenceService,
     private readonly ipfsService: IpfsService,
+    private readonly sorobanIntentService: SorobanIntentService,
   ) {}
 
   private getAuthenticatedUserId(req: AuthenticatedRequest): string {
@@ -184,6 +188,35 @@ export class EscrowController {
     const userId = this.getAuthenticatedUserId(req);
     const ipAddress = req.ip || req.socket?.remoteAddress;
     return this.escrowService.cancel(id, dto, userId, ipAddress);
+  }
+
+  /**
+   * POST /escrows/:id/prepare-intent
+   * Simulates and assembles a Soroban transaction and freezes it into a
+   * short-lived, user-bound intent. The caller signs `unsignedXdr` in their
+   * wallet; the server never sees a secret key.
+   */
+  @Post(':id/prepare-intent')
+  @UseGuards(EscrowAccessGuard)
+  @ApiOperation({
+    summary: 'Prepare a wallet-signable Soroban transaction for an escrow',
+  })
+  async prepareIntent(
+    @Param('id') id: string,
+    @Body() dto: PrepareIntentDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    const userId = this.getAuthenticatedUserId(req);
+    const escrow = await this.escrowService.findOne(id);
+    if (!escrow) {
+      throw new NotFoundException('Escrow not found');
+    }
+    return this.sorobanIntentService.prepare(
+      escrow,
+      userId,
+      req.user.walletAddress,
+      dto,
+    );
   }
 
   @Post(':id/expire')
